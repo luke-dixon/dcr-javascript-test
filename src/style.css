@@ -12,3 +12,7 @@ form > fieldset {
 form > div {
     padding-bottom: 1rem;
 }
+
+table {
+    border: solid;
+}
