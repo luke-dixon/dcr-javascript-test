@@ -1,0 +1,14 @@
+div#chart > svg {
+    border: solid;
+}
+
+form {
+}
+
+form > fieldset {
+    margin-bottom: 1rem;
+}
+
+form > div {
+    padding-bottom: 1rem;
+}

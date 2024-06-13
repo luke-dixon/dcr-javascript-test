@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <link href="./style.css" rel="stylesheet" />
+    </head>
+    <body>
+        <div>
+            <form id="chart-form">
+                <fieldset>
+                    <legend>By country</legend>
+                    <div>
+                        <input id="population-size" name="dataChoice" value="population" type="radio" checked>
+                        <label for="population-size">Population size</label>
+                    </div>
+                    <div>
+                        <input id="number-of-borders" name="dataChoice" value="numBorders" type="radio">
+                        <label for="number-of-borders">Number of borders</label>
+                    </div>
+                    <div>
+                        <input id="number-of-timezones" name="dataChoice" value="numTimezones" type="radio">
+                        <label for="number-of-timezones">Number of timezones</label>
+                    </div>
+                    <div>
+                        <input id="number-of-languages" name="dataChoice" value="numLanguages" type="radio">
+                        <label for="number-of-languages">Number of languages</label>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>By region</legend>
+                    <div>
+                        <input id="number-of-countries-in-region" name="dataChoice" value="regionNumCountries" type="radio">
+                        <label for="number-of-countries-in-region">Number of countries in region</label>
+                    </div>
+                    <div>
+                        <input id="number-of-unique-timezones-in-region" name="dataChoice" value="regionNumTimezones" type="radio">
+                        <label for="number-of-unique-timezones-in-region">Number of unique timezones in region</label>
+                    </div>
+                </fieldset>
+                <div>
+                    <input type="submit" value="Update Chart">
+                </div>
+            </form>
+        </div>
+        <div id="chart">
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+        <script src="bubblechart.js"></script>
+        <script src="script.js"></script>
+    </body>
+</html>
