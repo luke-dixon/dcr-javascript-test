@@ -16,6 +16,51 @@ form.addEventListener("submit", (event) => {
 });
 
 
+function getRegionData(data) {
+    const regions = {};
+    for (const country of data) {
+        if (country.region in regions) {
+            const timezones = regions[country.region].timezones;
+            for (const timezone of country.timezones) {
+                timezones.add(timezone);
+            }
+            regions[country.region]["unique timezones"] = timezones.size;
+            regions[country.region].countries++;
+        } else {
+            const timezones = new Set(country.timezones);
+            regions[country.region] = {
+                name: country.region,
+                countries: 1,
+                timezones: timezones,
+                "unique timezones": timezones.size,
+            };
+        }
+    }
+    return Object.values(regions);
+}
+
+
+function countryToolTip(country) {
+    const info = [
+        `Name: ${country.name}`,
+        `Population: ${country.population}`,
+        `Capital: ${country.capital}`,
+        `Region: ${country.region}`,
+        `Currencies: ${country.currencies.map(c => c.code).join(", ")}`,
+    ];
+    return info.join("\n");
+}
+
+function regionToolTip(region) {
+    const info = [
+        `Name: ${region.name}`,
+        `Countries: ${region.countries}`,
+        `Unique timezones: ${region["unique timezones"]}`,
+    ];
+    return info.join("\n");
+}
+
+
 const dataProcessors = {
     population: {
         getData: (data) => data,
@@ -24,6 +69,7 @@ const dataProcessors = {
         group: (d) => d.region,
         tableHeaders: ["name", "population"],
         tableRow: (d) => [d.name, d.population],
+        title: countryToolTip,
     },
     numBorders: {
         getData: (data) => data,
@@ -32,6 +78,7 @@ const dataProcessors = {
         group: (d) => d.region,
         tableHeaders: ["name", "borders"],
         tableRow: (d) => [d.name, d.borders.length],
+        title: countryToolTip,
     },
     numTimezones: {
         getData: (data) => data,
@@ -40,6 +87,7 @@ const dataProcessors = {
         group: (d) => d.region,
         tableHeaders: ["name", "timezones"],
         tableRow: (d) => [d.name, d.timezones.length],
+        title: countryToolTip,
     },
     numLanguages: {
         getData: (data) => data,
@@ -48,54 +96,25 @@ const dataProcessors = {
         group: (d) => d.region,
         tableHeaders: ["name", "languages"],
         tableRow: (d) => [d.name, d.languages.length],
+        title: countryToolTip,
     },
     regionNumCountries: {
-        getData: (data) => {
-            const regions = {};
-            for (const country of data) {
-                if (country.region in regions) {
-                    regions[country.region].countries++;
-                } else {
-                    regions[country.region] = {
-                        name: country.region,
-                        countries: 1,
-                    };
-                }
-            }
-            return Object.values(regions);
-        },
+        getData: getRegionData,
         label: (d) => [d.name, d.countries].join("\n"),
         value: (d) => d.countries,
         group: (d) => d.name,
         tableHeaders: ["name", "countries"],
         tableRow: (d) => [d.name, d.countries],
+        title: regionToolTip,
     },
     regionNumTimezones: {
-        getData: (data) => {
-            const regions = {};
-            for (const country of data) {
-                if (country.region in regions) {
-                    const timezones = regions[country.region].timezones;
-                    for (const timezone of country.timezones) {
-                        timezones.add(timezone);
-                    }
-                    regions[country.region]["unique timezones"] = timezones.size;
-                } else {
-                    const timezones = new Set(country.timezones);
-                    regions[country.region] = {
-                        name: country.region,
-                        timezones: timezones,
-                        "unique timezones": timezones.size,
-                    };
-                }
-            }
-            return Object.values(regions);
-        },
+        getData: getRegionData,
         label: (d) => [d.name, d["unique timezones"]].join("\n"),
         value: (d) => d["unique timezones"],
         group: (d) => d.name,
         tableHeaders: ["name", "unique timezones"],
         tableRow: (d) => [d.name, d["unique timezones"]],
+        title: regionToolTip,
     },
 };
 
@@ -115,6 +134,7 @@ async function createChart(processor) {
         label: processor.label,
         value: processor.value,
         group: processor.group,
+        title: processor.title,
     });
 
     document.getElementById("chart").appendChild(chart);
